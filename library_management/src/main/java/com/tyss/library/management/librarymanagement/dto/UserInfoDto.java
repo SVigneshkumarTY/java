@@ -13,11 +13,11 @@ public class UserInfoDto {
 	@GeneratedValue
 	@Column(name = "user_id")
 	private int userId;
-	@Column(name ="user_name" )
+	@Column(name ="user_name",nullable=false)
 	private String userName;
-	@Column(name ="user_contact_no")
+	@Column(name ="user_contact_no",unique=true)
 	private long userContactNo;
-	@Column(name = "user_email")
+	@Column(name = "user_email",unique=true)
 	private String userEmail;
 	@Column(name = "user_password")
 	private String userPassword;

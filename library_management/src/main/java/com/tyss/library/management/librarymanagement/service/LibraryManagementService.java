@@ -1,4 +1,4 @@
-package com.tyss.library.management.librarymanagement.dao;
+package com.tyss.library.management.librarymanagement.service;
 
 import java.util.List;
 
@@ -6,8 +6,7 @@ import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
 import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
 import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
 
-
-public interface LibraryManagementDao {
+public interface LibraryManagementService {
 	public void registerUser(UserInfoDto userInfo);
 	public UserInfoDto loginUser(String userName,String password);
 	public boolean updateUser(UserInfoDto userInfo);
