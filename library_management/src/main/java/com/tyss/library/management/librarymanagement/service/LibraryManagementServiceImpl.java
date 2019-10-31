@@ -77,4 +77,9 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	public boolean returnBook(int bookId) {
 		return dao.returnBook(bookId);
 	}
+
+	@Override
+	public List<UserInfoDto> searchByName(String userName) {
+		return dao.searchByName(userName);
+	}
 }

@@ -21,4 +21,5 @@ public interface LibraryManagementService {
 	public StudentBookDto acceptBookRequest(int userId,int bookId);
 	public List<StudentBookDto> getIssueBookList(int userId);
 	public boolean returnBook(int bookId);
+	public List<UserInfoDto> searchByName(String userName);
 }

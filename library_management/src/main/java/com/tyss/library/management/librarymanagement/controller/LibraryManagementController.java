@@ -104,4 +104,11 @@ public class LibraryManagementController {
     	return service.returnBook(bookId);
     }
 	
+	@GetMapping(path="/getByName",produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<UserInfoDto> searchByName(@RequestParam("userName") String userName){
+		List<UserInfoDto> users=service.searchByName(userName.trim());
+		return users;
+	}
+	
 }

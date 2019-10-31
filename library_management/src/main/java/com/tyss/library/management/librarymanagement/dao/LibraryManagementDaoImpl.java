@@ -246,4 +246,13 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		}
 		return flag;
 	}
+
+	@Override
+	public List<UserInfoDto> searchByName(String userName) {
+		EntityManager em = factory.createEntityManager();
+		String jpql="from UserInfoDto where userName=:userName";
+		Query query=em.createQuery(jpql);
+		query.setParameter("userName",userName);
+		return query.getResultList();
+	}
 }
