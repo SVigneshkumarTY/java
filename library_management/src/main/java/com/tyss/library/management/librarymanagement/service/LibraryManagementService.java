@@ -22,4 +22,5 @@ public interface LibraryManagementService {
 	public List<StudentBookDto> getIssueBookList(int userId);
 	public boolean returnBook(int bookId);
 	public List<UserInfoDto> searchByName(String userName);
+	public boolean changePassword(int id,String password,String newPassword);
 }

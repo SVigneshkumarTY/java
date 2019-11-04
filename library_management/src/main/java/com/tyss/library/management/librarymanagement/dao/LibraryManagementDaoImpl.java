@@ -22,6 +22,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	
 	@Override
 	public void registerUser(UserInfoDto userInfo) {
+		
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		
@@ -254,5 +255,31 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		Query query=em.createQuery(jpql);
 		query.setParameter("userName",userName);
 		return query.getResultList();
+	}
+
+	@Override
+	public boolean changePassword(int id, String password,String newPassword) {
+		EntityManager em = factory.createEntityManager();
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		String jpql="from UserInfoDto where userId=:id and userPassword=:password";
+		try {
+			Query query=em.createQuery(jpql);
+			query.setParameter("id",id);
+			query.setParameter("password",password);
+		 UserInfoDto dto = (UserInfoDto)query.getSingleResult();
+		 if(dto != null) {
+			 dto.setUserPassword(newPassword);
+			 et.commit();
+			 return true;
+		 }else {
+			 return false;
+		 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
 	}
 }

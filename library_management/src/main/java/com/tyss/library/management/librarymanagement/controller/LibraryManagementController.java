@@ -20,7 +20,7 @@ import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
 import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
 import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
 import com.tyss.library.management.librarymanagement.service.LibraryManagementService;
-@CrossOrigin
+@CrossOrigin(origins="*",allowedHeaders="*",allowCredentials="true")
 @RestController
 @RequestMapping("librarymanagement")
 public class LibraryManagementController {
@@ -111,4 +111,11 @@ public class LibraryManagementController {
 		return users;
 	}
 	
+	@GetMapping(path="/changepwd",produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean changePassword(@RequestParam("userId") int id,@RequestParam("userPassword") String oldPassword,@RequestParam("newPassword") String newPassword) {
+		
+		return service.changePassword(id, oldPassword, newPassword);
+		
+	}
 }

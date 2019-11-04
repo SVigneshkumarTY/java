@@ -82,4 +82,9 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	public List<UserInfoDto> searchByName(String userName) {
 		return dao.searchByName(userName);
 	}
+
+	@Override
+	public boolean changePassword(int id, String password, String newPassword) {
+		return dao.changePassword(id, password, newPassword);
+	}
 }

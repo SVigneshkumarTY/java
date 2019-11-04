@@ -6,7 +6,6 @@ import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
 import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
 import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
 
-
 public interface LibraryManagementDao {
 	public void registerUser(UserInfoDto userInfo);
 	public UserInfoDto loginUser(String userName,String password);
@@ -23,4 +22,6 @@ public interface LibraryManagementDao {
 	public List<StudentBookDto> getIssueBookList(int userId);
 	public boolean returnBook(int bookId);
 	public List<UserInfoDto> searchByName(String userName);
+	
+	public boolean changePassword(int id,String password,String newPassword);
 }
