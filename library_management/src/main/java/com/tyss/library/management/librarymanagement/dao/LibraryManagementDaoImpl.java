@@ -3,12 +3,17 @@ package com.tyss.library.management.librarymanagement.dao;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Repository;
 
 import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
@@ -20,13 +25,25 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	@PersistenceUnit
 	private EntityManagerFactory factory;
 	
+	@Autowired
+	private JavaMailSender sender;
+	
 	@Override
-	public void registerUser(UserInfoDto userInfo) {
+	public void registerUser(UserInfoDto userInfo,String to,String subject,String body){
+		
+		MimeMessage message=sender.createMimeMessage();
+		
 		
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		
 		try {
+			
+			MimeMessageHelper helper =new MimeMessageHelper(message, true);
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setText(body,true);
+			sender.send(message);
 			et.begin();
 			em.persist(userInfo);
 			et.commit();

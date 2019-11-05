@@ -14,8 +14,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	@Autowired
     private LibraryManagementDao dao;
 	@Override
-	public void registerUser(UserInfoDto userInfo) {
-		dao.registerUser(userInfo);
+	public void registerUser(UserInfoDto userInfo,String to,String subject,String body) {
+		dao.registerUser(userInfo,to,subject,body);
 	}
 
 	@Override

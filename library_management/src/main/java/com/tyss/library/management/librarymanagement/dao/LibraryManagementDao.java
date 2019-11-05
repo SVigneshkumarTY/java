@@ -7,7 +7,7 @@ import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
 import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
 
 public interface LibraryManagementDao {
-	public void registerUser(UserInfoDto userInfo);
+	public void registerUser(UserInfoDto userInfo,String to,String subject,String body);
 	public UserInfoDto loginUser(String userName,String password);
 	public boolean updateUser(UserInfoDto userInfo);
 	public boolean removeUser(int id);
