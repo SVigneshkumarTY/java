@@ -290,7 +290,7 @@ public class LibraryManagementController {
 	public LibraryResponse addBook(@RequestBody BookRegistration request) {
 		LibraryResponse response = new LibraryResponse();
 		if (service.addBook(request)) {
-			service.removeBook(request.getRegId());
+			service.removeBook(request.getBookId());
 			response.setStatusCode(201);
 			response.setMessage("success");
 			response.setDescription("data  successfully stored..");

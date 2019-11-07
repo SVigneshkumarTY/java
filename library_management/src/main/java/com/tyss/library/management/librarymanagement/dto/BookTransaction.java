@@ -15,28 +15,23 @@ public class BookTransaction {
 	@Id
 	@Column
 	@GeneratedValue
-	private int transId;
+	private int bookId;
 	@Column
-	private int regId;
+	private String bookName;
+	@Column
+	private String author1;
+	@Column
+	private String author2;
+	@Column
+	private String publisher;
+	@Column
+	private int yearOfPublication;
 	@Column 
 	private int userId;
 	@Column
-	private int bookId;
-	@Column 
-	private String bookName;
-	@Column
-	private Date issueDate;
+	private Date issuedDate;
 	@Column
 	private Date returnDate;
-	@Column
-	private int fine;
-	
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
 	public int getBookId() {
 		return bookId;
 	}
@@ -49,27 +44,41 @@ public class BookTransaction {
 	public void setBookName(String bookName) {
 		this.bookName = bookName;
 	}
-	
-	
-	
-	public int getTransId() {
-		return transId;
+	public String getAuthor1() {
+		return author1;
 	}
-	public void setTransId(int transId) {
-		this.transId = transId;
+	public void setAuthor1(String author1) {
+		this.author1 = author1;
 	}
-	public int getRegId() {
-		return regId;
+	public String getAuthor2() {
+		return author2;
 	}
-	public void setRegId(int regId) {
-		this.regId = regId;
+	public void setAuthor2(String author2) {
+		this.author2 = author2;
 	}
-	
-	public Date getIssueDate() {
-		return issueDate;
+	public String getPublisher() {
+		return publisher;
 	}
-	public void setIssueDate(Date issueDate) {
-		this.issueDate = issueDate;
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+	public int getYearOfPublication() {
+		return yearOfPublication;
+	}
+	public void setYearOfPublication(int yearOfPublication) {
+		this.yearOfPublication = yearOfPublication;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public Date getIssuedDate() {
+		return issuedDate;
+	}
+	public void setIssuedDate(Date issuedDate) {
+		this.issuedDate = issuedDate;
 	}
 	public Date getReturnDate() {
 		return returnDate;
@@ -77,12 +86,4 @@ public class BookTransaction {
 	public void setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
 	}
-	public int getFine() {
-		return fine;
-	}
-	public void setFine(int fine) {
-		this.fine = fine;
-	}
-	
-
 }

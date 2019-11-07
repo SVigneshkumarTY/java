@@ -334,8 +334,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		EntityManager manager = factory.createEntityManager();
 		EntityTransaction transaction = manager.getTransaction();
 		BookTransaction allocateBook = new BookTransaction();
-		allocateBook.setRegId(bookAction.getRegId());
-		allocateBook.setIssueDate(new Date());
+		allocateBook.setIssuedDate(new Date());
 		allocateBook.setReturnDate(new Date());
 		allocateBook.setBookId(bookAction.getBookId());
 		allocateBook.setBookName(bookAction.getBookName());

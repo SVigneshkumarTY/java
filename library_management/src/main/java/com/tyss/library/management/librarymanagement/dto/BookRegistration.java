@@ -15,33 +15,56 @@ public class BookRegistration {
 	@Id
 	@Column
 	@GeneratedValue
-	private int regId;
-	@Column
 	private int bookId;
-	@Column 
+	@Column
 	private String bookName;
+	@Column
+	private String author1;
+	@Column
+	private String author2;
+	@Column
+	private String publisher;
+	@Column
+	private int yearOfPublication;
 	@Column
 	private int userId;
 	@Column
 	private Date regDate;
+	public int getBookId() {
+		return bookId;
+	}
+	public void setBookId(int bookId) {
+		this.bookId = bookId;
+	}
 	public String getBookName() {
 		return bookName;
 	}
 	public void setBookName(String bookName) {
 		this.bookName = bookName;
 	}
-	
-	public int getRegId() {
-		return regId;
+	public String getAuthor1() {
+		return author1;
 	}
-	public void setRegId(int regId) {
-		this.regId = regId;
+	public void setAuthor1(String author1) {
+		this.author1 = author1;
 	}
-	public int getBookId() {
-		return bookId;
+	public String getAuthor2() {
+		return author2;
 	}
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+	public void setAuthor2(String author2) {
+		this.author2 = author2;
+	}
+	public String getPublisher() {
+		return publisher;
+	}
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+	public int getYearOfPublication() {
+		return yearOfPublication;
+	}
+	public void setYearOfPublication(int yearOfPublication) {
+		this.yearOfPublication = yearOfPublication;
 	}
 	public int getUserId() {
 		return userId;
@@ -55,5 +78,4 @@ public class BookRegistration {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
-	
 }
