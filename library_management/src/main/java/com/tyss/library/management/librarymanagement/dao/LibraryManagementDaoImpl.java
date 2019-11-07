@@ -2,8 +2,8 @@ package com.tyss.library.management.librarymanagement.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,9 +16,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Repository;
 
-import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
-import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
-import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
+import com.tyss.library.management.librarymanagement.dto.BookRegistration;
+import com.tyss.library.management.librarymanagement.dto.BookTransaction;
+import com.tyss.library.management.librarymanagement.dto.BooksInventory;
+import com.tyss.library.management.librarymanagement.dto.Users;
 @Repository
 public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	
@@ -29,7 +30,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	private JavaMailSender sender;
 	
 	@Override
-	public void registerUser(UserInfoDto userInfo,String to,String subject,String body){
+	public boolean registerUser(Users userInfo,String to,String subject,String body){
 		
 		MimeMessage message=sender.createMimeMessage();
 		
@@ -47,22 +48,24 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 			et.begin();
 			em.persist(userInfo);
 			et.commit();
+			return true;
 		} catch (Exception e) {
 			et.rollback();
 			e.printStackTrace();
+			return false;
 		}
 		
 	}//end of registerUser
 
 	@Override
-	public UserInfoDto loginUser(String userName, String password) {
+	public Users loginUser(String userName, String password) {
 		EntityManager em = factory.createEntityManager();
-		String jpql="from UserInfoDto where userEmail=:email and userPassword=:password";
+		String jpql="from Users where userEmail=:email and userPassword=:password";
 		try {
 			Query query=em.createQuery(jpql);
 			query.setParameter("email",userName);
 			query.setParameter("password",password);
-			return (UserInfoDto)query.getSingleResult();
+			return (Users)query.getSingleResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -72,18 +75,16 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	}//end of loginUser
 
 	@Override
-	public boolean updateUser(UserInfoDto user) {
+	public boolean updateUser(Users user) {
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
-		UserInfoDto userInfo=em.find(UserInfoDto.class,user.getUserId());
+		Users userInfo=em.find(Users.class,user.getUserId());
 		if(userInfo!=null) {
 			et.begin();
             userInfo.setUserName(user.getUserName());
             userInfo.setUserEmail(user.getUserEmail());
             userInfo.setUserPassword(user.getUserPassword());
-            userInfo.setUserContactNo(user.getUserContactNo());
             userInfo.setUserRole(user.getUserRole());
-            userInfo.setUserGender(user.getUserGender());
             et.commit();
 			return true;
 		}
@@ -96,7 +97,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		et.begin();
-		UserInfoDto userInfo = em.find(UserInfoDto.class, id);
+		Users userInfo = em.find(Users.class, id);
 
 		if (userInfo == null) {
 			return false;
@@ -115,7 +116,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	}// End of removeUser
 
 	@Override
-	public void addBook(BookInfoDto bookDto) {
+	public boolean addBook(BooksInventory bookDto) {
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		
@@ -123,9 +124,11 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 			et.begin();
 			em.persist(bookDto);
 			et.commit();
+			return true;
 		} catch (Exception e) {
 			et.rollback();
 			e.printStackTrace();
+			return false;
 		}
 			
 	}//End of addBook
@@ -135,7 +138,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		et.begin();
-		BookInfoDto bookInfo = em.find(BookInfoDto.class, id);
+		BooksInventory bookInfo = em.find(BooksInventory.class, id);
 
 		if (bookInfo == null) {
 			return false;
@@ -154,15 +157,18 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	}//End of deleteBook
 
 	@Override
-	public boolean updateBook(BookInfoDto book) {
+	public boolean updateBook(BooksInventory book) {
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
-		BookInfoDto bookInfo=em.find(BookInfoDto.class,book.getBookId());
+		BooksInventory bookInfo=em.find(BooksInventory.class,book.getBookId());
 		if(bookInfo!=null) {
 			et.begin();
 			bookInfo.setBookName(book.getBookName());
-			bookInfo.setAuthorName(book.getAuthorName());
-			bookInfo.setCategory(book.getCategory());
+			bookInfo.setAuthor1(book.getAuthor1());
+			bookInfo.setAuthor2(book.getAuthor2());
+			bookInfo.setPublisher(book.getPublisher());
+			bookInfo.setYearOfPublication(book.getYearOfPublication());
+			
 			et.commit();
 			return true;
 		}
@@ -170,10 +176,10 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	}//End of updateBook
 
 	@Override
-	public BookInfoDto getBook(BookInfoDto bookDto) {
+	public BooksInventory getBook(BooksInventory bookDto) {
 		EntityManager em = factory.createEntityManager();
 
-		BookInfoDto bookInfo = em.find(BookInfoDto.class, bookDto.getBookId());
+		BooksInventory bookInfo = em.find(BooksInventory.class, bookDto.getBookId());
 		if (bookInfo == null) {
 			return null;
 		}
@@ -182,109 +188,85 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<UserInfoDto> getAllUsers() {
+	public List<Users> getAllUsers() {
 		EntityManager em = factory.createEntityManager();
-		String queryStr="from UserInfoDto";
+		String queryStr="from Users";
 		Query query=em.createQuery(queryStr);
 		return query.getResultList();
 	}//End of getAllUsers
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<BookInfoDto> getAllBooks() {
+	public List<BooksInventory> getAllBooks() {
 		EntityManager em = factory.createEntityManager();
-		String queryStr="from BookInfoDto";
+		String queryStr="from BooksInventory";
 		Query query=em.createQuery(queryStr);
 		return query.getResultList();
 	}
 
+	/*
+	 * @Override public StudentBookDto acceptBookRequest(int userId, int bookId) {
+	 * StudentBookDto studentBook=new StudentBookDto(); EntityManager em =
+	 * factory.createEntityManager(); EntityTransaction et = em.getTransaction();
+	 * 
+	 * try { BookInfoDto bookInfoDto=em.find(BookInfoDto.class,bookId); et.begin();
+	 * if(bookInfoDto!=null) { Date date = new Date();
+	 * studentBook.setUserId(userId); studentBook.setBookId(bookId);
+	 * studentBook.setBookName(bookInfoDto.getBookName());
+	 * studentBook.setAuthorName(bookInfoDto.getAuthorName());
+	 * studentBook.setCategory(bookInfoDto.getCategory());
+	 * studentBook.setIssueDate(date);
+	 * 
+	 * em.remove(bookInfoDto);
+	 * 
+	 * em.persist(studentBook); }
+	 * 
+	 * et.commit(); } catch (Exception e) { et.rollback(); e.printStackTrace(); }
+	 * return studentBook; }//End of acceptBookRequest
+	 * 
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @Override public List<StudentBookDto> getIssueBookList(int userId) {
+	 * EntityManager em = factory.createEntityManager(); String
+	 * jpql="from StudentBookDto where userId=:userId"; Query
+	 * query=em.createQuery(jpql); query.setParameter("userId", userId); return
+	 * query.getResultList(); }
+	 * 
+	 * @Override public boolean returnBook(int bookId) { boolean flag=false;
+	 * EntityManager em = factory.createEntityManager(); EntityTransaction et =
+	 * em.getTransaction(); try { StudentBookDto
+	 * studentBook=em.find(StudentBookDto.class,bookId); BookInfoDto bookInfo=new
+	 * BookInfoDto(); if(studentBook!=null) {
+	 * bookInfo.setBookId(studentBook.getBookId());
+	 * bookInfo.setBookName(studentBook.getBookName());
+	 * bookInfo.setAuthorName(studentBook.getAuthorName());
+	 * bookInfo.setCategory(studentBook.getCategory());
+	 * 
+	 * et.begin(); em.remove(studentBook); em.persist(bookInfo); et.commit();
+	 * flag=true; } } catch (Exception e) { e.printStackTrace(); } return flag; }
+	 * 
+	 */	
+	
 	@Override
-	public StudentBookDto acceptBookRequest(int userId, int bookId) {
-		StudentBookDto studentBook=new StudentBookDto();
+	public List<Users> searchByName(String userName) {
 		EntityManager em = factory.createEntityManager();
-		EntityTransaction et = em.getTransaction();
-		
-		try {
-			BookInfoDto bookInfoDto=em.find(BookInfoDto.class,bookId);
-			et.begin();
-			if(bookInfoDto!=null) {
-				Date date = new Date();
-				studentBook.setUserId(userId);
-				studentBook.setBookId(bookId);
-				studentBook.setBookName(bookInfoDto.getBookName());
-				studentBook.setAuthorName(bookInfoDto.getAuthorName());
-				studentBook.setCategory(bookInfoDto.getCategory());
-				studentBook.setIssueDate(date);
-				
-				em.remove(bookInfoDto);
-				
-				em.persist(studentBook);
-			}
-			
-			et.commit();	
-		} catch (Exception e) {
-			et.rollback();
-			e.printStackTrace();
-		}
-		return studentBook;
-	}//End of acceptBookRequest
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<StudentBookDto> getIssueBookList(int userId) {
-		EntityManager em = factory.createEntityManager();
-		String jpql="from StudentBookDto where userId=:userId";
-		Query query=em.createQuery(jpql);
-		query.setParameter("userId", userId);
-		return query.getResultList();
-	}
-
-	@Override
-	public boolean returnBook(int bookId) {
-		boolean flag=false;
-		EntityManager em = factory.createEntityManager();
-		EntityTransaction et = em.getTransaction();
-		try {
-			StudentBookDto studentBook=em.find(StudentBookDto.class,bookId);
-			BookInfoDto bookInfo=new BookInfoDto();
-			if(studentBook!=null) {
-				bookInfo.setBookId(studentBook.getBookId());
-				bookInfo.setBookName(studentBook.getBookName());
-				bookInfo.setAuthorName(studentBook.getAuthorName());
-				bookInfo.setCategory(studentBook.getCategory());
-				
-				et.begin();
-				em.remove(studentBook);
-				em.persist(bookInfo);
-				et.commit();
-				flag=true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return flag;
-	}
-
-	@Override
-	public List<UserInfoDto> searchByName(String userName) {
-		EntityManager em = factory.createEntityManager();
-		String jpql="from UserInfoDto where userName=:userName";
+		String jpql="from Users where userName=:userName";
 		Query query=em.createQuery(jpql);
 		query.setParameter("userName",userName);
 		return query.getResultList();
 	}
 
 	@Override
-	public boolean changePassword(int id, String password,String newPassword) {
+	public boolean changePassword(String email, String password,String newPassword) {
 		EntityManager em = factory.createEntityManager();
 		EntityTransaction et = em.getTransaction();
 		et.begin();
-		String jpql="from UserInfoDto where userId=:id and userPassword=:password";
+		String jpql="from Users where userEmail=:email and userPassword=:password";
 		try {
 			Query query=em.createQuery(jpql);
-			query.setParameter("id",id);
+			query.setParameter("email",email);
 			query.setParameter("password",password);
-		 UserInfoDto dto = (UserInfoDto)query.getSingleResult();
+		 Users dto = (Users)query.getSingleResult();
 		 if(dto != null) {
 			 dto.setUserPassword(newPassword);
 			 et.commit();
@@ -298,5 +280,104 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		}
 		
 		
+	}
+
+	@Override
+	public boolean requestBook(BooksInventory book,int id) {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+		BookRegistration bookreg = new BookRegistration();
+		bookreg.setBookId(book.getBookId());
+		bookreg.setRegDate(new Date());
+		bookreg.setUserId(id);
+		try {
+			transaction.begin();
+			manager.persist(bookreg);
+			transaction.commit();
+			return true;
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+			return false;
+		}
+	}
+	@Override
+	public List<BookRegistration> getAllBook() {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+
+		String get = "from BookRegistration";
+		Query query = manager.createQuery(get);
+		List<BookRegistration> list = query.getResultList();
+		if (list == null) {
+			return null;
+		}
+		return list;
+	}
+	
+	@Override
+	public boolean removeBook(int bId) {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+		BookRegistration book = manager.find(BookRegistration.class, bId);
+		if (book == null) {
+			return false;
+		}
+		transaction.begin();
+		manager.remove(book);
+		transaction.commit();
+		return true;
+	}
+	
+	@Override
+	public boolean addBook(BookRegistration bookAction) {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+		BookTransaction allocateBook = new BookTransaction();
+		allocateBook.setRegId(bookAction.getRegId());
+		allocateBook.setIssueDate(new Date());
+		allocateBook.setReturnDate(new Date());
+		allocateBook.setBookId(bookAction.getBookId());
+		allocateBook.setBookName(bookAction.getBookName());
+		allocateBook.setUserId(bookAction.getUserId());
+		try {
+			transaction.begin();
+			manager.persist(allocateBook);
+			transaction.commit();
+			return true;
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<BookTransaction> getAlluserBooks(int id) {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+
+		String get = "from BookTransaction where userId=:id";
+		Query query=manager.createQuery(get);
+		query.setParameter("id",id);
+		List<BookTransaction> list = query.getResultList();
+		if (list == null) {
+			return null;
+		}
+		return list;
+	}
+
+	@Override
+	public boolean removeBookReg(String bId) {
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction transaction = manager.getTransaction();
+		BookTransaction book = manager.find(BookTransaction.class, bId);
+		if (book == null) {
+			return false;
+		}
+		transaction.begin();
+		manager.remove(book);
+		transaction.commit();
+		return true;
 	}
 }

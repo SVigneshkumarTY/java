@@ -6,25 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tyss.library.management.librarymanagement.dao.LibraryManagementDao;
-import com.tyss.library.management.librarymanagement.dto.BookInfoDto;
-import com.tyss.library.management.librarymanagement.dto.StudentBookDto;
-import com.tyss.library.management.librarymanagement.dto.UserInfoDto;
+import com.tyss.library.management.librarymanagement.dto.BookRegistration;
+import com.tyss.library.management.librarymanagement.dto.BookTransaction;
+import com.tyss.library.management.librarymanagement.dto.BooksInventory;
+import com.tyss.library.management.librarymanagement.dto.Users;
 @Service
 public class LibraryManagementServiceImpl implements LibraryManagementService{
 	@Autowired
     private LibraryManagementDao dao;
 	@Override
-	public void registerUser(UserInfoDto userInfo,String to,String subject,String body) {
-		dao.registerUser(userInfo,to,subject,body);
+	public boolean registerUser(Users userInfo,String to,String subject,String body) {
+		return dao.registerUser(userInfo,to,subject,body);
 	}
 
 	@Override
-	public UserInfoDto loginUser(String userName, String password) {
+	public Users loginUser(String userName, String password) {
 		return dao.loginUser(userName, password);
 	}
 
 	@Override
-	public boolean updateUser(UserInfoDto userInfo) {
+	public boolean updateUser(Users userInfo) {
 		return dao.updateUser(userInfo);
 	}
 
@@ -34,8 +35,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	}
 
 	@Override
-	public void addBook(BookInfoDto bookDto) {
-		dao.addBook(bookDto);	
+	public boolean addBook(BooksInventory bookDto) {
+		return dao.addBook(bookDto);	
 	}
 
 	@Override
@@ -44,47 +45,72 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	}
 
 	@Override
-	public boolean updateBook(BookInfoDto bookDto) {
+	public boolean updateBook(BooksInventory bookDto) {
 		return dao.updateBook(bookDto);
 	}
 
 	@Override
-	public BookInfoDto getBook(BookInfoDto bookDto) {
+	public BooksInventory getBook(BooksInventory bookDto) {
 		return dao.getBook(bookDto);
 	}
 
 	@Override
-	public List<UserInfoDto> getAllUsers() {
+	public List<Users> getAllUsers() {
 		return dao.getAllUsers();
 	}
 
 	@Override
-	public List<BookInfoDto> getAllBooks() {
+	public List<BooksInventory> getAllBooks() {
 		return dao.getAllBooks();
 	}
+	/*
+	 * @Override public StudentBookDto acceptBookRequest(int userId, int bookId) {
+	 * return dao.acceptBookRequest(userId, bookId); }
+	 * 
+	 * @Override public List<StudentBookDto> getIssueBookList(int userId) { return
+	 * dao.getIssueBookList(userId); }
+	 * 
+	 * @Override public boolean returnBook(int bookId) { return
+	 * dao.returnBook(bookId); }
+	 */
 
 	@Override
-	public StudentBookDto acceptBookRequest(int userId, int bookId) {
-		return dao.acceptBookRequest(userId, bookId);
-	}
-
-	@Override
-	public List<StudentBookDto> getIssueBookList(int userId) {
-		return dao.getIssueBookList(userId);
-	}
-
-	@Override
-	public boolean returnBook(int bookId) {
-		return dao.returnBook(bookId);
-	}
-
-	@Override
-	public List<UserInfoDto> searchByName(String userName) {
+	public List<Users> searchByName(String userName) {
 		return dao.searchByName(userName);
 	}
 
 	@Override
-	public boolean changePassword(int id, String password, String newPassword) {
-		return dao.changePassword(id, password, newPassword);
+	public boolean changePassword(String email, String password, String newPassword) {
+		return dao.changePassword(email, password, newPassword);
+	}
+
+	@Override
+	public boolean requestBook(BooksInventory book,int id) {
+		return dao.requestBook(book,id);
+	}
+
+	@Override
+	public List<BookRegistration> getAllBook() {
+		return dao.getAllBook();
+	}
+
+	@Override
+	public boolean removeBook(int bId) {
+		return dao.removeBook(bId);
+	}
+
+	@Override
+	public boolean addBook(BookRegistration bookAction) {
+		return dao.addBook(bookAction);
+	}
+
+	@Override
+	public List<BookTransaction> getAlluserBooks(int id) {
+		return dao.getAlluserBooks(id);
+	}
+
+	@Override
+	public boolean removeBookReg(String bId) {
+		return dao.removeBookReg(bId);
 	}
 }
