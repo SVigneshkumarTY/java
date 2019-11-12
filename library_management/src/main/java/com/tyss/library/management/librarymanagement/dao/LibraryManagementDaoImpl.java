@@ -1,5 +1,6 @@
 package com.tyss.library.management.librarymanagement.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -67,7 +68,6 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 			query.setParameter("password",password);
 			return (Users)query.getSingleResult();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 			
@@ -83,8 +83,6 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 			et.begin();
             userInfo.setUserName(user.getUserName());
             userInfo.setUserEmail(user.getUserEmail());
-            userInfo.setUserPassword(user.getUserPassword());
-            userInfo.setUserRole(user.getUserRole());
             et.commit();
 			return true;
 		}
@@ -122,7 +120,7 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		
 		try {
 			et.begin();
-			em.persist(bookDto);
+			em.merge(bookDto);
 			et.commit();
 			return true;
 		} catch (Exception e) {
@@ -290,9 +288,14 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		bookreg.setBookId(book.getBookId());
 		bookreg.setRegDate(new Date());
 		bookreg.setUserId(id);
+		bookreg.setAuthor1(book.getAuthor1());
+		bookreg.setAuthor2(book.getAuthor2());
+		bookreg.setBookName(book.getBookName());
+		bookreg.setPublisher(book.getPublisher());
+		bookreg.setYearOfPublication(book.getYearOfPublication());
 		try {
 			transaction.begin();
-			manager.persist(bookreg);
+			manager.merge(bookreg);
 			transaction.commit();
 			return true;
 		} catch (Exception e) {
@@ -308,11 +311,12 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 
 		String get = "from BookRegistration";
 		Query query = manager.createQuery(get);
-		List<BookRegistration> list = query.getResultList();
-		if (list == null) {
+		try {
+			List<BookRegistration> list = query.getResultList();
+			return list;
+		} catch (Exception e) {
 			return null;
 		}
-		return list;
 	}
 	
 	@Override
@@ -330,19 +334,28 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	}
 	
 	@Override
-	public boolean addBook(BookRegistration bookAction) {
+	public boolean allocateBook(BookRegistration bookAction) {
+		Calendar calendar = Calendar.getInstance();
+		Date today = calendar.getTime();
+		calendar.add(Calendar.DAY_OF_YEAR, 14);
+		Date returnDate = calendar.getTime();
 		EntityManager manager = factory.createEntityManager();
 		EntityTransaction transaction = manager.getTransaction();
 		BookTransaction allocateBook = new BookTransaction();
-		allocateBook.setIssuedDate(new Date());
-		allocateBook.setReturnDate(new Date());
+		allocateBook.setIssuedDate(today);
+		allocateBook.setReturnDate(returnDate);
+		allocateBook.setAuthor1(bookAction.getAuthor1());
+		allocateBook.setAuthor2(bookAction.getAuthor2());
+		allocateBook.setPublisher(bookAction.getPublisher());
+		allocateBook.setYearOfPublication(bookAction.getYearOfPublication());
 		allocateBook.setBookId(bookAction.getBookId());
 		allocateBook.setBookName(bookAction.getBookName());
 		allocateBook.setUserId(bookAction.getUserId());
 		try {
 			transaction.begin();
-			manager.persist(allocateBook);
+			manager.merge(allocateBook);
 			transaction.commit();
+			System.out.println("book added");
 			return true;
 		} catch (Exception e) {
 			transaction.rollback();
@@ -355,19 +368,17 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 	public List<BookTransaction> getAlluserBooks(int id) {
 		EntityManager manager = factory.createEntityManager();
 		EntityTransaction transaction = manager.getTransaction();
-
+System.out.println(id);
 		String get = "from BookTransaction where userId=:id";
 		Query query=manager.createQuery(get);
 		query.setParameter("id",id);
 		List<BookTransaction> list = query.getResultList();
-		if (list == null) {
-			return null;
-		}
+		System.out.println(list);
 		return list;
 	}
 
 	@Override
-	public boolean removeBookReg(String bId) {
+	public boolean removeBookReg(int bId) {
 		EntityManager manager = factory.createEntityManager();
 		EntityTransaction transaction = manager.getTransaction();
 		BookTransaction book = manager.find(BookTransaction.class, bId);
@@ -378,5 +389,56 @@ public class LibraryManagementDaoImpl implements LibraryManagementDao{
 		manager.remove(book);
 		transaction.commit();
 		return true;
+	}
+
+	@Override
+	public boolean addBookAgain(BookTransaction book) {
+		BooksInventory bk = new BooksInventory();
+		bk.setBookId(book.getBookId());
+		bk.setBookName(book.getBookName());
+		bk.setAuthor1(book.getAuthor1());
+		bk.setAuthor2(book.getAuthor2());
+		bk.setPublisher(book.getPublisher());
+		bk.setYearOfPublication(book.getYearOfPublication());
+		
+		EntityManager em = factory.createEntityManager();
+		EntityTransaction et = em.getTransaction();
+		
+		try {
+			et.begin();
+			em.merge(bk);
+			et.commit();
+			return true;
+		} catch (Exception e) {
+			et.rollback();
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean addBookAgain1(BookRegistration book) {
+		BooksInventory bk = new BooksInventory();
+		bk.setBookId(book.getBookId());
+		bk.setBookName(book.getBookName());
+		bk.setAuthor1(book.getAuthor1());
+		bk.setAuthor2(book.getAuthor2());
+		bk.setPublisher(book.getPublisher());
+		bk.setYearOfPublication(book.getYearOfPublication());
+		
+		EntityManager em = factory.createEntityManager();
+		EntityTransaction et = em.getTransaction();
+		
+		try {
+			et.begin();
+			em.merge(bk);
+			et.commit();
+			return true;
+		} catch (Exception e) {
+			et.rollback();
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 }

@@ -11,7 +11,6 @@ import javax.persistence.Table;
 public class BooksInventory {
 	@Id
 	@Column
-	@GeneratedValue
 	private int bookId;
 	@Column
 	private String bookName;

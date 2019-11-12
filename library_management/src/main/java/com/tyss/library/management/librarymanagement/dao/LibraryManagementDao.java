@@ -30,9 +30,11 @@ public interface LibraryManagementDao {
 	public List<BookRegistration> getAllBook();
 	public boolean removeBook(int bId);
 	
-	public boolean addBook(BookRegistration bookAction);
+	public boolean allocateBook(BookRegistration bookAction);
 
 	public List<BookTransaction> getAlluserBooks(int id);
 	
-	public boolean removeBookReg(String bId);
+	public boolean removeBookReg(int bId);
+	public boolean addBookAgain(BookTransaction book);
+	public boolean addBookAgain1(BookRegistration book);
 }

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LibraryResponse {
+	@Override
+	public String toString() {
+		return "LibraryResponse [statusCode=" + statusCode + ", message=" + message + ", description=" + description
+				+ ", users=" + users + ", books=" + books + ", bookReg=" + bookReg + ", bookTrans=" + bookTrans + "]";
+	}
 	private int statusCode;
 	private String message;
 	private String description;

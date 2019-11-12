@@ -100,8 +100,8 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	}
 
 	@Override
-	public boolean addBook(BookRegistration bookAction) {
-		return dao.addBook(bookAction);
+	public boolean allocateBook(BookRegistration bookAction) {
+		return dao.allocateBook(bookAction);
 	}
 
 	@Override
@@ -110,7 +110,17 @@ public class LibraryManagementServiceImpl implements LibraryManagementService{
 	}
 
 	@Override
-	public boolean removeBookReg(String bId) {
+	public boolean removeBookReg(int bId) {
 		return dao.removeBookReg(bId);
+	}
+
+	@Override
+	public boolean addBookAgain(BookTransaction book) {
+		return dao.addBookAgain(book);
+	}
+
+	@Override
+	public boolean addBookAgain1(BookRegistration book) {
+		return dao.addBookAgain1(book);
 	}
 }

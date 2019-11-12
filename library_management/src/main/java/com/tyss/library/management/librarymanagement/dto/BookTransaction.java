@@ -8,13 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="books_trans")
 public class BookTransaction {
 	
 	@Id
 	@Column
-	@GeneratedValue
 	private int bookId;
 	@Column
 	private String bookName;
@@ -29,8 +30,10 @@ public class BookTransaction {
 	@Column 
 	private int userId;
 	@Column
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date issuedDate;
 	@Column
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date returnDate;
 	public int getBookId() {
 		return bookId;

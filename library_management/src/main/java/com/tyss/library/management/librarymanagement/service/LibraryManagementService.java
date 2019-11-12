@@ -30,9 +30,11 @@ public interface LibraryManagementService {
 	public List<BookRegistration> getAllBook();
 	public boolean removeBook(int bId);
 	
-	public boolean addBook(BookRegistration request);
+	public boolean allocateBook(BookRegistration request);
 
 	public List<BookTransaction> getAlluserBooks(int id);
 	
-	public boolean removeBookReg(String bId);
+	public boolean removeBookReg(int bId);
+	public boolean addBookAgain(BookTransaction book);
+	public boolean addBookAgain1(BookRegistration book);
 }
